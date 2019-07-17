@@ -10,7 +10,7 @@ namespace QESRawConverter.Classes
     public class ACPStructure
     {
         #region Variables
-        [Name(" StIDSecID ")]
+        [Name("StIDSecID ")]
         public string StIDSecID { get; set; }
 
         [Name(" SampleNumber ")]
@@ -109,11 +109,11 @@ namespace QESRawConverter.Classes
         [Name(" Weather H")]
         public int WeatH { get; set; }
 
-        [Name(" Special ")]
-        public string Special { get; set; }
+   //     [Name(" Special ")]
+     //   public string Special { get; set; }
 
-        [Name(" Date ")]
-        public string date { get; set; }
+       // [Name(" Date ")]
+     //   public string date { get; set; }
         #endregion
 
 
@@ -296,17 +296,19 @@ namespace QESRawConverter.Classes
             SectionID = Infile.StIDSecID;
             SectionID.Substring(SectionID.IndexOf("-"));
             SampleNumber = Infile.SampleNumber;
-            InspectionDate = Infile.date;
+            InspectionDate = "";
+            Special = "";
+           // InspectionDate = Infile.date;
             InspectionArea = Infile.SampleArea;
             InspectionLength = Infile.SampleLength;
-            if(Infile.Special != "0")
-            {
-                Special = "Yes";
-            }
-            else
-            {
-                Special = "No";
-            }
+         //   if(Infile.Special != "0")
+        //    {
+        //        Special = "Yes";
+        //    }
+        //    else
+        //    {
+         //       Special = "No";
+         //   }
 
         }
 

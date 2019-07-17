@@ -36,8 +36,8 @@ namespace QESRawConverter
 
                 Console.WriteLine(openFileDialog1.FileName);
                 Console.WriteLine(Path.GetDirectoryName(openFileDialog1.FileName));
-            
-                
+                label1.Text = "Input File: "+ openFileDialog1.SafeFileName;
+                string OutputFile = "";
                 if (openFileDialog1.FileName.Contains("ACP"))
                 {
                     using (var reader = new StreamReader(openFileDialog1.FileName))
@@ -45,12 +45,11 @@ namespace QESRawConverter
                         using (var csv = new CsvHelper.CsvReader(reader))
                         {
                             var records = csv.GetRecords<Classes.ACPStructure>();
-
-                            using (var s = new StreamWriter(Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + openFileDialog1.SafeFileName.Replace("Raw Data", "Converted")))
+                            OutputFile = Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + openFileDialog1.SafeFileName.Replace("Raw Data", "Converted");
+                            using (var s = new StreamWriter(OutputFile))
                             {
                                 using (var cs = new CsvHelper.CsvWriter(s))
                                 {
-                                    //  s.WriteLine("StreetID, SectionID, InspectionUnit#, InspectionDate, InspectionArea, InspectionLength, DistressType, Severity, DistressSize, NoDistress, Special");
                                     foreach (var Rec in records)
                                     {
                                         cs.WriteRecords(Classes.ACPOutput.GetNewRecords(Rec));
@@ -59,13 +58,14 @@ namespace QESRawConverter
                                     s.Close();
                                 }
                             }
-                           
+
                         }
                         reader.Close();
                     }
-                    
+                    label2.Text = "Output File: " + openFileDialog1.SafeFileName.Replace("Raw Data", "Converted");
+
+                    DialogResult result = MessageBox.Show("File Location: " + OutputFile, "Conversion Done", MessageBoxButtons.OK);
                 }
-                // Do Stuff
             }
 
         }
