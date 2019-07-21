@@ -10,110 +10,110 @@ namespace QESRawConverter.Classes
     public class ACPStructure
     {
         #region Variables
-        [Name("StIDSecID ")]
+        [Name("StIDSecID")]
         public string StIDSecID { get; set; }
 
-        [Name(" SampleNumber ")]
+        [Name("SampleNumber")]
         public int SampleNumber { get; set; }
 
-        [Name( " StreetName ")]
+        [Name( "StreetName")]
         public string StreetName { get; set; }
 
-        [Name(" BegLocatio ")]
+        [Name("BegLocatio")]
         public string BegLocatio { get; set; }
 
-        [Name(" EndLocatio ")]
+        [Name("EndLocatio")]
         public string EndLocatio { get; set; }
 
-        [Name(" Sample Length ")]
+        [Name("Sample Length")]
         public int SampleLength { get; set; }
 
-        [Name(" Sample Width")]
+        [Name("Sample Width")]
         public int SampleWidth { get; set; }
 
-        [Name(" Sample Area ")]
+        [Name("Sample Area")]
         public int SampleArea { get; set; }
 
-        [Name(" Sample Notes ")]
+        [Name("Sample Notes")]
         public string SampleNotes { get; set; }
 
-        [Name(" Alligator L ")]
+        [Name("Alligator L")]
         public int AlligatorL { get; set; }
 
-        [Name(" Alligator M ")]
+        [Name("Alligator M")]
         public int AlligatorM { get; set; }
 
-        [Name(" Alligator H ")]
+        [Name("Alligator H")]
         public int AlligatorH { get; set; }
 
-        [Name(" Block L ")]
+        [Name("Block L")]
         public int BlockL { get; set; }
 
-        [Name(" Block M")]
+        [Name("Block M")]
         public int BlockM { get; set; }
 
-        [Name(" Block H ")]
+        [Name("Block H")]
         public int BlockH { get; set; }
 
-        [Name(" Distortion L")]
+        [Name("Distortion L")]
         public int DistortionL { get; set; }
 
-        [Name(" Distortion M")]
+        [Name("Distortion M")]
         public int DistortionM { get; set; }
 
-        [Name(" Distortion H ")]
+        [Name("Distortion H")]
         public int DistortionH { get; set; }
 
-        [Name(" LongTrans L")]
+        [Name("LongTrans L")]
         public int LTCL { get; set; }
 
-        [Name(" LongTrans M ")]
+        [Name("LongTrans M")]
         public int LTCM { get; set; }
 
-        [Name(" LongTrans H ")]
+        [Name("LongTrans H")]
         public int LTCH { get; set; }
 
-        [Name(" Patch L ")]
+        [Name("Patch L")]
         public int PatchL { get; set; }
 
-        [Name(" Patch M")]
+        [Name("Patch M")]
         public int PatchM { get; set; }
 
-        [Name(" Patch H ")]
+        [Name("Patch H")]
         public int PatchH { get; set; }
 
-        [Name(" Raveling L")]
+        [Name("Raveling L")]
         public int RavL { get; set; }
 
-        [Name(" Raveling M")]
+        [Name("Raveling M")]
         public int RavM { get; set; }
 
-        [Name(" Raveling H")]
+        [Name("Raveling H")]
         public int RavH { get; set; }
 
-        [Name(" RuttingDepression L")]
+        [Name("RuttingDepression L")]
         public int RutL { get; set; }
 
-        [Name(" RuttingDepression M")]
+        [Name("RuttingDepression M")]
         public int RutM { get; set; }
 
-        [Name(" RuttingDepression H")]
+        [Name("RuttingDepression H")]
         public int RutH { get; set; }
 
-        [Name(" Weathering L")]
+        [Name("Weathering L")]
         public int WeatL { get; set; }
 
-        [Name(" Weathering M")]
+        [Name("Weathering M")]
         public int WeatM { get; set; }
 
-        [Name(" Weather H")]
+        [Name("Weather H")]
         public int WeatH { get; set; }
 
-   //     [Name(" Special ")]
-     //   public string Special { get; set; }
+        [Name("Special")]
+        public string Special { get; set; }
 
-       // [Name(" Date ")]
-     //   public string date { get; set; }
+        [Name("Date")]
+        public string date { get; set; }
         #endregion
 
 
@@ -296,19 +296,19 @@ namespace QESRawConverter.Classes
             SectionID = Infile.StIDSecID;
             SectionID.Substring(SectionID.IndexOf("-"));
             SampleNumber = Infile.SampleNumber;
-            InspectionDate = "";
-            Special = "";
-           // InspectionDate = Infile.date;
+           // InspectionDate = "";
+           // Special = "";
+            InspectionDate = Infile.date;
             InspectionArea = Infile.SampleArea;
             InspectionLength = Infile.SampleLength;
-         //   if(Infile.Special != "0")
-        //    {
-        //        Special = "Yes";
-        //    }
-        //    else
-        //    {
-         //       Special = "No";
-         //   }
+            if(Infile.Special != "0")
+            {
+                Special = "Yes";
+            }
+            else
+            {
+                Special = "No";
+            }
 
         }
 
