@@ -2,15 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QESRawConverter.Classes
 {
     public class ACPStructure
     {
-
+        // Values From Input CSV
         #region Variables
         [Name("StIDSecID")]
         public string StIDSecID { get; set; }
@@ -35,9 +32,6 @@ namespace QESRawConverter.Classes
 
         [Name("Sample Area")]
         public int SampleArea { get; set; }
-
-    //    [Name("Sample Notes")]
-  //      public string SampleNotes { get; set; }
 
         [Name("Alligator L")]
         public int AlligatorL { get; set; }
@@ -117,13 +111,10 @@ namespace QESRawConverter.Classes
         [Name("Date")]
         public string date { get; set; }
         #endregion
-
-
-
-
     }
     public class ACPOutput
     {
+        // Values for Output CSV
         [Name("StreetID")]
         public string StreetID { get; set; }
 
@@ -165,26 +156,30 @@ namespace QESRawConverter.Classes
             bool WillHaveDistress = false;
             List<ACPOutput> temp = new List<ACPOutput>();
 
-            int CheckAll = 0;
+            // value that will be in the error column
             string ErrorMessage = "";
-            CheckAll = Infile.AlligatorL + Infile.AlligatorM + Infile.AlligatorH + Infile.PatchL + Infile.PatchM + Infile.PatchH + Infile.BlockL + Infile.BlockM + Infile.BlockH;
-            int checkblock = 0;
+
+            // Error Check if Alligator, Block, and Patching values are greater than the Sample's Area
+            int CheckAll = Infile.AlligatorL + Infile.AlligatorM + Infile.AlligatorH + Infile.PatchL + Infile.PatchM + Infile.PatchH + Infile.BlockL + Infile.BlockM + Infile.BlockH;
             if (CheckAll > Infile.SampleArea)
             {
                 ErrorMessage = "Alligator/Block/Patch > Sample Area.";
             }
 
-            checkblock = Infile.BlockL + Infile.BlockM + Infile.BlockH;
-
+            // Error Check if the Sample's Area is within bounds
             if ((Infile.SampleArea > 4000) || (Infile.SampleArea < 1000))
             {
                 ErrorMessage = ErrorMessage + " Sample Area Outside Bounds.";
             }
+
+            // Error Check if the Sample has a valid Sample Number
             if (Infile.SampleNumber == 0)
             {
                 ErrorMessage = ErrorMessage + " Sample Number Missing.";
             }
 
+            // Error Check if Block cracking is 100% of Sample area and if there is Longitudinal and Transverse Cracking too.
+            int checkblock = Infile.BlockL + Infile.BlockM + Infile.BlockH;
             if (checkblock == Infile.SampleArea)
             {
                 if ((Infile.LTCL > 0) || (Infile.LTCM > 0) || (Infile.LTCH > 0))
@@ -192,13 +187,15 @@ namespace QESRawConverter.Classes
                     ErrorMessage = ErrorMessage + " Block 100% with Long/Trans.";
                 }
             }
-            int CheckWeatherRavel = 0;
-            CheckWeatherRavel = Infile.WeatL + Infile.WeatM + Infile.WeatH + Infile.RavL + Infile.RavM + Infile.RavH;
+
+            // Error Check if Weathering and Raveling are greater than Sample's Area
+            int CheckWeatherRavel = Infile.WeatL + Infile.WeatM + Infile.WeatH + Infile.RavL + Infile.RavM + Infile.RavH;
             if (CheckWeatherRavel > Infile.SampleArea)
             {
                 ErrorMessage = ErrorMessage + " Weather+Ravel > Sample Area.";
             }
 
+            // Error Check if there is a value for Raveling Low.
             if (Infile.RavL > 0)
             {
                 ErrorMessage = ErrorMessage + " Low Raveling - " + Infile.RavL;
@@ -206,6 +203,7 @@ namespace QESRawConverter.Classes
 
 
             #region Alligator
+            // Add to List for Low, Medium, or High Alligator Cracking if the Sample had values for those distresses
             if (Infile.AlligatorL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Alligator Cracking", Severity = 'L', DistressSize = Infile.AlligatorL, NoDistresses = "No", Error = ErrorMessage });
@@ -224,6 +222,8 @@ namespace QESRawConverter.Classes
             }
             #endregion
             #region Block
+
+            // Add to List for Low, Medium, or High Block Cracking if the Sample had values for those distresses
             if (Infile.BlockL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Block Cracking", Severity = 'L', DistressSize = Infile.BlockL, NoDistresses = "No", Error = ErrorMessage });
@@ -241,6 +241,8 @@ namespace QESRawConverter.Classes
             }
             #endregion
             #region Distortions
+
+            // Add to List for Low, Medium, or High Distortions if the Sample had values for those distresses
             if (Infile.DistortionL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Distortions", Severity = 'L', DistressSize = Infile.DistortionL, NoDistresses = "No", Error = ErrorMessage });
@@ -258,6 +260,8 @@ namespace QESRawConverter.Classes
             }
             #endregion
             #region LTC
+
+            // Add to List for Low, Medium, or High Longitudinal/Transverse Cracking if the Sample had values for those distresses
             if (Infile.LTCL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Long. & Trans. Cracking", Severity = 'L', DistressSize = Infile.LTCL, NoDistresses = "No", Error = ErrorMessage });
@@ -275,6 +279,8 @@ namespace QESRawConverter.Classes
             }
             #endregion
             #region Patching
+
+            // Add to List for Low, Medium, or High Patching if the Sample had values for those distresses
             if (Infile.PatchL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Patch & Util. Cut Patch", Severity = 'L', DistressSize = Infile.PatchL, NoDistresses = "No", Error = ErrorMessage });
@@ -293,6 +299,8 @@ namespace QESRawConverter.Classes
             }
             #endregion
             #region Rutting/Depression
+
+            // Add to List for Low, Medium, or High Rutting/Depression if the Sample had values for those distresses
             if (Infile.RutL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Rutting/Depression", Severity = 'L', DistressSize = Infile.RutL, NoDistresses = "No", Error = ErrorMessage });
@@ -309,47 +317,10 @@ namespace QESRawConverter.Classes
                 WillHaveDistress = true;
             }
             #endregion
-            #region Weathering And Raveling
-            /*
-            if ((Infile.WeatL > 0) || (Infile.RavL > 0))
-            {
-                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering & Raveling", Severity = 'L', DistressSize = Infile.WeatL + Infile.RavL, NoDistresses = "No", Error = ErrorMessage });
-                WillHaveDistress = true;
-            }
-            if ((Infile.WeatM > 0) || (Infile.RavM > 0))
-            {
-
-                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering & Raveling", Severity = 'M', DistressSize = Infile.WeatM + Infile.RavM, NoDistresses = "No", Error = ErrorMessage });
-                WillHaveDistress = true;
-            }
-            if ((Infile.WeatH > 0) || (Infile.RavH > 0))
-            {
-
-                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering & Raveling", Severity = 'H', DistressSize = Infile.WeatH + Infile.RavH, NoDistresses = "No", Error = ErrorMessage });
-                WillHaveDistress = true;
-            }
-            */
-            #region Weathering
-            if (Infile.WeatL > 0)
-            {
-                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering", Severity = 'L', DistressSize = Infile.WeatL, NoDistresses = "No", Error = ErrorMessage });
-                WillHaveDistress = true;
-            }
-            if (Infile.WeatM > 0)
-            {
-
-                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering", Severity = 'M', DistressSize = Infile.WeatM, NoDistresses = "No", Error = ErrorMessage });
-                WillHaveDistress = true;
-            }
-            if (Infile.WeatH > 0)
-            {
-
-                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering", Severity = 'H', DistressSize = Infile.WeatH, NoDistresses = "No", Error = ErrorMessage });
-                WillHaveDistress = true;
-            }
-            #endregion
             #region Raveling
-            if  (Infile.RavL > 0)
+
+            // Add to List for Low, Medium, or High Raveling if the Sample had values for those distresses
+            if (Infile.RavL > 0)
             {
                 temp.Add(new ACPOutput(Infile) { DistressType = "Raveling", Severity = 'L', DistressSize = Infile.RavL, NoDistresses = "No", Error = ErrorMessage });
                 WillHaveDistress = true;
@@ -367,36 +338,45 @@ namespace QESRawConverter.Classes
                 WillHaveDistress = true;
             }
             #endregion
-            #endregion
+
+            // Add to List if there are no distresses
             if (WillHaveDistress == false)
             {
-                temp.Add(new ACPOutput(Infile) { NoDistresses = "Yes" , DistressSize=null});
+                temp.Add(new ACPOutput(Infile) { NoDistresses = "Yes", DistressSize = null });
             }
 
             return temp;
         }
         public ACPOutput(ACPStructure Infile)
         {
+            // Get the Street ID
             StreetID = Infile.StIDSecID;
-            StreetID= StreetID.Substring(0, StreetID.IndexOf('-'));
+            StreetID = StreetID.Substring(0, StreetID.IndexOf('-'));
+
+            // Get the Section ID
             SectionID = Infile.StIDSecID;
-            SectionID=SectionID.Substring(SectionID.IndexOf('-')+2);
+            SectionID = SectionID.Substring(SectionID.IndexOf('-') + 2);
+
+            // Get the Sample Number
             SampleNumber = Infile.SampleNumber;
             try
             {
+                // Convert Date in Original CSV to the format required in the new CSV
                 var dt = DateTime.ParseExact(Infile.date, "MM-dd-yyyy  HH:mm:ss", CultureInfo.InvariantCulture);
 
-                //  InspectionDate = Infile.date;
                 InspectionDate = dt.ToString("MM/dd/yyyy");
             }
-            catch 
+            catch
             {
                 InspectionDate = Infile.date;
             }
+
+            // Get Inspection Area and Length
             InspectionArea = Infile.SampleArea;
             InspectionLength = Infile.SampleLength;
-          //  System.Diagnostics.Debug.Write("Special Value = " + Infile.Special);
-            if(Infile.Special == "0")
+
+            // Get if Sample is considered Special
+            if (Infile.Special == "0")
             {
                 Special = "No";
             }
@@ -406,10 +386,8 @@ namespace QESRawConverter.Classes
             }
             else
             {
-                Special = "No";
+                Special = "Yes";
             }
-
         }
-
     }
 }

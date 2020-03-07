@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace QESRawConverter
 {
@@ -33,40 +26,37 @@ namespace QESRawConverter
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-
-                Console.WriteLine(openFileDialog1.FileName);
-                Console.WriteLine(Path.GetDirectoryName(openFileDialog1.FileName));
+                // Show Input file on GUI
                 label1.Text = "Input File: "+ openFileDialog1.SafeFileName;
                 string OutputFile = "";
-                int iter = 0;
+
                 if (openFileDialog1.FileName.Contains("ACP"))
                 {
                     using (var reader = new StreamReader(openFileDialog1.FileName))
                     {
                         using (var csv = new CsvHelper.CsvReader(reader))
                         {
+                            // Get Input CSV Rows
                             var records = csv.GetRecords<Classes.ACPStructure>();
 
-                          //  Console.WriteLine(records.Count());
+                            // Create Output file path
                             OutputFile = Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + openFileDialog1.SafeFileName.Replace("Raw Data", "Converted");
+
                             using (var s = new StreamWriter(OutputFile))
                             {
                                 using (var cs = new CsvHelper.CsvWriter(s))
                                 {
+                                    // Write new records to Output CSV file.
                                     try
                                     {
                                         foreach (var Rec in records)
                                         {
-                                            Console.WriteLine("Record Number" + iter);
-                                            Console.WriteLine(Rec.StIDSecID);
-                                            iter++;
-                                         cs.WriteRecords(Classes.ACPOutput.GetNewRecords(Rec));
+                                            cs.WriteRecords(Classes.ACPOutput.GetNewRecords(Rec));
                                             cs.Flush();
                                         }
                                     }catch (CsvHelper.CsvHelperException ex){
                                         Console.WriteLine("Exception" + ex.Data.Values);
                                     }
-
                                     s.Close();
                                 }
                             }
@@ -74,9 +64,13 @@ namespace QESRawConverter
                         }
                         reader.Close();
                     }
-
+                    // Show Output file location on the GUI
                     label2.Text = "Output File: " + openFileDialog1.SafeFileName.Replace("Raw Data", "Converted");
+
+                    // create another copy of the output file with Sheet1.csv as the name.
                     System.IO.File.Copy(OutputFile, Path.GetDirectoryName(openFileDialog1.FileName) + @"\Sheet1.csv", true);
+
+                    // Show popup that tells the user the CSV file was converted.
                     DialogResult result = MessageBox.Show("File Location: " + OutputFile, "Conversion Done", MessageBoxButtons.OK);
                 }
             }
