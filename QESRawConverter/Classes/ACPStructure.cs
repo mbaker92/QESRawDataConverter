@@ -384,7 +384,7 @@ namespace QESRawConverter.Classes
             SampleNumber = Infile.SampleNumber;
             try
             {
-                var dt = DateTime.ParseExact(Infile.date, "dd-MM-yyyy  HH:mm:ss", CultureInfo.InvariantCulture);
+                var dt = DateTime.ParseExact(Infile.date, "MM-dd-yyyy  HH:mm:ss", CultureInfo.InvariantCulture);
 
                 //  InspectionDate = Infile.date;
                 InspectionDate = dt.ToString("MM/dd/yyyy");
