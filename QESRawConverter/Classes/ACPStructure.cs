@@ -317,6 +317,26 @@ namespace QESRawConverter.Classes
                 WillHaveDistress = true;
             }
             #endregion
+            #region Weathering
+            // Add to List for Low, Medium, or High Weathering if the Sample had values for those distresses
+            if (Infile.WeatL > 0)
+            {
+                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering", Severity = 'L', DistressSize = Infile.WeatL, NoDistresses = "No", Error = ErrorMessage });
+                WillHaveDistress = true;
+            }
+            if (Infile.WeatM > 0)
+            {
+
+                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering", Severity = 'M', DistressSize = Infile.WeatM, NoDistresses = "No", Error = ErrorMessage });
+                WillHaveDistress = true;
+            }
+            if (Infile.WeatH > 0)
+            {
+
+                temp.Add(new ACPOutput(Infile) { DistressType = "Weathering", Severity = 'H', DistressSize = Infile.WeatH, NoDistresses = "No", Error = ErrorMessage });
+                WillHaveDistress = true;
+            }
+            #endregion
             #region Raveling
 
             // Add to List for Low, Medium, or High Raveling if the Sample had values for those distresses
@@ -362,7 +382,7 @@ namespace QESRawConverter.Classes
             try
             {
                 // Convert Date in Original CSV to the format required in the new CSV
-                var dt = DateTime.ParseExact(Infile.date, "MM-dd-yyyy  HH:mm:ss", CultureInfo.InvariantCulture);
+                var dt = DateTime.ParseExact(Infile.date, "dd-MM-yyyy  HH:mm:ss", CultureInfo.InvariantCulture);
 
                 InspectionDate = dt.ToString("MM/dd/yyyy");
             }
