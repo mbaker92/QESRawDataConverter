@@ -13,4 +13,5 @@ Processes Road Rating Data from a CSV file and outputs another CSV file
 
 <h3>Converted File</h3>
 <p>An example of the Converted file is shown below. It shows an example of the error message, samples without distress, and the format of samples with distresses.</p>
+
 <img src="https://github.com/mbaker92/QESRawDataConverter/blob/master/Screenshots/Capture3.PNG?raw=true"><br>
